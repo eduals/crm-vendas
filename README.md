@@ -19,14 +19,14 @@ Sistema de gerenciamento de vendas e visitas imobiliárias. Uma aplicação comp
 - Tailwind CSS
 - Clerk Auth
 - PostgreSQL
-- Bun
+- Node.js
 
 ## Começando
 
 ### Pré-requisitos
 
 - Node.js 20+
-- Bun
+- npm
 - PostgreSQL
 
 ### Instalação
@@ -39,7 +39,7 @@ Sistema de gerenciamento de vendas e visitas imobiliárias. Uma aplicação comp
 
 2. Instale as dependências
    ```bash
-   bun install
+   npm install
    ```
 
 3. Configure as variáveis de ambiente
@@ -47,7 +47,7 @@ Sistema de gerenciamento de vendas e visitas imobiliárias. Uma aplicação comp
 
 4. Inicie o servidor de desenvolvimento
    ```bash
-   bun run dev
+   npm run dev
    ```
 
 ### Docker
@@ -61,4 +61,4 @@ docker run -p 3000:3000 crm-vendas
 
 ## Licença
 
-Este projeto está licenciado sob a [Licença MIT](LICENSE). 
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
