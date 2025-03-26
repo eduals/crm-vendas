@@ -8,11 +8,8 @@ WORKDIR /app
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat python3 make g++
 
-# Install bun globally
-RUN npm install -g bun
-
 # Copy package files first for better caching
-COPY package.json bun.lockb* ./
+COPY package.json package-lock.json* ./
 
 # Copy all config files
 COPY next.config.mjs ./
@@ -35,16 +32,13 @@ COPY scripts ./scripts
 # Check if we have an .env file and copy it
 COPY .env* ./
 
-# Install dependencies with Bun
+# Install dependencies with npm
 ENV NODE_OPTIONS="--max-old-space-size=8192"
-RUN bun install --verbose
+RUN npm ci --legacy-peer-deps --verbose
 
 # Builder stage
 FROM base AS builder
 WORKDIR /app
-
-# Install bun globally in the builder stage
-RUN npm install -g bun
 
 # Copy dependencies and project files
 COPY --from=deps /app/node_modules ./node_modules
@@ -82,7 +76,7 @@ ENV ENCRYPTION_KEY=$ENCRYPTION_KEY
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Build the application with verbose output
-RUN bun run build
+RUN npm run build
 
 # Runner stage
 FROM base AS runner
@@ -102,7 +96,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-# COPY --from=builder --chown=nextjs:nodejs /app/.env* ./
+COPY --from=builder --chown=nextjs:nodejs /app/.env* ./
 
 # Switch to non-root user
 USER nextjs
@@ -111,4 +105,4 @@ USER nextjs
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "server.js"] 
+CMD ["node", "server.js"]
