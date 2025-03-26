@@ -61,4 +61,4 @@ docker run -p 3000:3000 crm-vendas
 
 ## Licença
 
-Este projeto está licenciado sob a [Licença MIT](LICENSE). 
+Este projeto está licenciado sob a [Licença MIT](LICENSE).
