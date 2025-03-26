@@ -1,0 +1,103 @@
+[
+  {
+    "id": 1,
+    "name": "Carlos Silva",
+    "license_number": "CRECI 12345",
+    "phone": "(11) 98765-4321",
+    "email": "carlos.silva@imobiliaria.com",
+    "agency": "Imobiliária Central",
+    "is_active": true,
+    "created_at": "10/01/2024"
+  },
+  {
+    "id": 2,
+    "name": "Ana Beatriz",
+    "license_number": "CRECI 23456",
+    "phone": "(11) 97654-3210",
+    "email": "ana.beatriz@imobiliaria.com",
+    "agency": "Imóveis Premium",
+    "is_active": true,
+    "created_at": "15/01/2024"
+  },
+  {
+    "id": 3,
+    "name": "Roberto Almeida",
+    "license_number": "CRECI 34567",
+    "phone": "(11) 96543-2109",
+    "email": "roberto.almeida@imobiliaria.com",
+    "agency": "Imobiliária Central",
+    "is_active": true,
+    "created_at": "20/01/2024"
+  },
+  {
+    "id": 4,
+    "name": "Juliana Mendes",
+    "license_number": "CRECI 45678",
+    "phone": "(11) 95432-1098",
+    "email": "juliana.mendes@imobiliaria.com",
+    "agency": "Imóveis Premium",
+    "is_active": true,
+    "created_at": "25/01/2024"
+  },
+  {
+    "id": 5,
+    "name": "Marcos Oliveira",
+    "license_number": "CRECI 56789",
+    "phone": "(11) 94321-0987",
+    "email": "marcos.oliveira@imobiliaria.com",
+    "agency": "Imobiliária Central",
+    "is_active": false,
+    "created_at": "01/02/2024"
+  },
+  {
+    "id": 6,
+    "name": "Fernanda Lima",
+    "license_number": "CRECI 67890",
+    "phone": "(11) 93210-9876",
+    "email": "fernanda.lima@imobiliaria.com",
+    "agency": "Imóveis Premium",
+    "is_active": true,
+    "created_at": "05/02/2024"
+  },
+  {
+    "id": 7,
+    "name": "Ricardo Souza",
+    "license_number": "CRECI 78901",
+    "phone": "(11) 92109-8765",
+    "email": "ricardo.souza@imobiliaria.com",
+    "agency": "Imobiliária Central",
+    "is_active": true,
+    "created_at": "10/02/2024"
+  },
+  {
+    "id": 8,
+    "name": "Camila Santos",
+    "license_number": "CRECI 89012",
+    "phone": "(11) 91098-7654",
+    "email": "camila.santos@imobiliaria.com",
+    "agency": "Imóveis Premium",
+    "is_active": true,
+    "created_at": "15/02/2024"
+  },
+  {
+    "id": 9,
+    "name": "Paulo Mendes",
+    "license_number": "CRECI 90123",
+    "phone": "(11) 90987-6543",
+    "email": "paulo.mendes@imobiliaria.com",
+    "agency": "Imobiliária Central",
+    "is_active": false,
+    "created_at": "20/02/2024"
+  },
+  {
+    "id": 10,
+    "name": "Luciana Costa",
+    "license_number": "CRECI 01234",
+    "phone": "(11) 99876-5432",
+    "email": "luciana.costa@imobiliaria.com",
+    "agency": "Imóveis Premium",
+    "is_active": true,
+    "created_at": "25/02/2024"
+  }
+]
+

@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "code": "AP001",
+    "address": "Rua das Flores, 123 - Jardim Primavera",
+    "type": "Apartamento",
+    "area": "85",
+    "price": "450000",
+    "description": "Apartamento com 2 quartos, sala ampla, cozinha planejada e 1 vaga de garagem.",
+    "status": "Disponível",
+    "created_at": "10/01/2024"
+  },
+  {
+    "id": 2,
+    "code": "CS002",
+    "address": "Av. Principal, 456 - Centro",
+    "type": "Casa",
+    "area": "120",
+    "price": "650000",
+    "description": "Casa com 3 quartos (1 suíte), sala de estar e jantar, cozinha, área de serviço e 2 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "15/01/2024"
+  },
+  {
+    "id": 3,
+    "code": "AP003",
+    "address": "Rua dos Ipês, 789 - Vila Nova",
+    "type": "Apartamento",
+    "area": "65",
+    "price": "320000",
+    "description": "Apartamento com 1 quarto, sala, cozinha americana e 1 vaga de garagem.",
+    "status": "Disponível",
+    "created_at": "20/01/2024"
+  },
+  {
+    "id": 4,
+    "code": "CS004",
+    "address": "Alameda das Palmeiras, 321 - Jardim Europa",
+    "type": "Casa",
+    "area": "200",
+    "price": "980000",
+    "description": "Casa com 4 quartos (2 suítes), escritório, sala ampla, cozinha planejada, área gourmet e 3 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "25/01/2024"
+  },
+  {
+    "id": 5,
+    "code": "AP005",
+    "address": "Rua das Acácias, 567 - Jardim Botânico",
+    "type": "Apartamento",
+    "area": "110",
+    "price": "580000",
+    "description": "Apartamento com 3 quartos (1 suíte), sala de estar e jantar, cozinha planejada, área de serviço e 2 vagas de garagem.",
+    "status": "Vendido",
+    "created_at": "01/02/2024"
+  },
+  {
+    "id": 6,
+    "code": "CS006",
+    "address": "Av. das Araucárias, 890 - Alphaville",
+    "type": "Casa",
+    "area": "350",
+    "price": "1500000",
+    "description": "Casa em condomínio fechado com 5 quartos (3 suítes), escritório, sala de estar e jantar, cozinha planejada, área gourmet, piscina e 4 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "05/02/2024"
+  },
+  {
+    "id": 7,
+    "code": "AP007",
+    "address": "Rua dos Pinheiros, 432 - Pinheiros",
+    "type": "Apartamento",
+    "area": "95",
+    "price": "520000",
+    "description": "Apartamento com 2 quartos (1 suíte), sala ampla, cozinha planejada, área de serviço e 1 vaga de garagem.",
+    "status": "Disponível",
+    "created_at": "10/02/2024"
+  },
+  {
+    "id": 8,
+    "code": "CS008",
+    "address": "Av. Paulista, 1000 - Bela Vista",
+    "type": "Cobertura",
+    "area": "180",
+    "price": "1200000",
+    "description": "Cobertura duplex com 3 quartos (2 suítes), sala ampla, cozinha planejada, área gourmet, terraço e 2 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "15/02/2024"
+  },
+  {
+    "id": 9,
+    "code": "AP009",
+    "address": "Rua Augusta, 765 - Consolação",
+    "type": "Apartamento",
+    "area": "70",
+    "price": "420000",
+    "description": "Apartamento com 2 quartos, sala, cozinha e 1 vaga de garagem.",
+    "status": "Disponível",
+    "created_at": "20/02/2024"
+  },
+  {
+    "id": 10,
+    "code": "CS010",
+    "address": "Av. Rebouças, 543 - Pinheiros",
+    "type": "Sala Comercial",
+    "area": "50",
+    "price": "380000",
+    "description": "Sala comercial com banheiro e 1 vaga de garagem.",
+    "status": "Vendido",
+    "created_at": "25/02/2024"
+  },
+  {
+    "id": 11,
+    "code": "AP011",
+    "address": "Rua Oscar Freire, 876 - Jardins",
+    "type": "Apartamento",
+    "area": "130",
+    "price": "850000",
+    "description": "Apartamento com 3 quartos (1 suíte), sala ampla, cozinha planejada, área de serviço e 2 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "01/03/2024"
+  },
+  {
+    "id": 12,
+    "code": "CS012",
+    "address": "Av. Brigadeiro Faria Lima, 234 - Itaim Bibi",
+    "type": "Sala Comercial",
+    "area": "80",
+    "price": "650000",
+    "description": "Sala comercial com copa, 2 banheiros e 2 vagas de garagem.",
+    "status": "Disponível",
+    "created_at": "05/03/2024"
+  }
+]
+
