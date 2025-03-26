@@ -34,7 +34,7 @@ COPY .env* ./
 
 # Install dependencies with npm
 ENV NODE_OPTIONS="--max-old-space-size=8192"
-RUN npm install --force --verbose
+RUN npm install --force --legacy-peer-deps
 
 # Builder stage
 FROM base AS builder
