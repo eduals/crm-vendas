@@ -58,12 +58,12 @@ const data = {
       title: "Configurações",
       url: "/settings",
       icon: SettingsIcon,
-    },
-    {
-      title: "Ajuda",
-      url: "/help",
-      icon: SearchIcon,
-    },
+    }
+    // {
+    //   title: "Ajuda",
+    //   url: "/help",
+    //   icon: SearchIcon,
+    // },
   ],
 }
 
