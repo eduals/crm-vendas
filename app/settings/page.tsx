@@ -1,8 +1,5 @@
 "use client"
 
-import { AppSidebar } from "../../components/app-sidebar"
-import { SiteHeader } from "../../components/site-header"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -234,15 +231,9 @@ function SettingsContent() {
 
 export default function SettingsPage() {
   return (
-    <SidebarProvider>
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <Suspense fallback={<SettingsSkeleton />}>
-          <SettingsContent />
-        </Suspense>
-      </SidebarInset>
-    </SidebarProvider>
+    <Suspense fallback={<SettingsSkeleton />}>
+      <SettingsContent />
+    </Suspense>
   )
 }
 
