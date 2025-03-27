@@ -30,7 +30,7 @@ COPY middleware.ts ./
 COPY scripts ./scripts
 
 # Check if we have an .env file and copy it
-COPY .env* ./
+# COPY .env* ./
 
 # Install dependencies with npm
 ENV NODE_OPTIONS="--max-old-space-size=8192"

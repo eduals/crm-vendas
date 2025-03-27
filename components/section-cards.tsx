@@ -17,15 +17,32 @@ export function SectionCards() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [mounted, setMounted] = useState(false)
 
+  // Primeiro useEffect apenas para marcar que o componente está montado no cliente
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Segundo useEffect que só executa quando mounted = true
+  useEffect(() => {
+    if (!mounted) return
+    
     const fetchMetrics = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch('/api/metrics')
+        const response = await fetch('/api/metrics', {
+          headers: {
+            'x-client-fetch': 'true'
+          },
+          // Aumentando o timeout para 15 segundos
+          signal: AbortSignal.timeout(15000)
+        })
+        
         if (!response.ok) {
           throw new Error('Failed to fetch metrics')
         }
+        
         const data = await response.json()
         setMetrics(data)
       } catch (err) {
@@ -37,7 +54,7 @@ export function SectionCards() {
     }
 
     fetchMetrics()
-  }, [])
+  }, [mounted])
 
   if (isLoading) {
     return <CardSkeletonGroup />

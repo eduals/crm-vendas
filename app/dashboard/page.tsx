@@ -61,19 +61,31 @@ export default function DashboardPage() {
   const [visits, setVisits] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [mounted, setMounted] = useState(false)
 
+  // Primeiro useEffect apenas para marcar que o componente está montado no cliente
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Segundo useEffect que só executa quando mounted = true
+  useEffect(() => {
+    if (!mounted) return
+
     const fetchVisits = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch('/api/visits')
+        const response = await fetch('/api/visits', {
+          headers: {
+            'x-client-fetch': 'true'
+          }
+        })
         if (!response.ok) {
           throw new Error('Failed to fetch visits')
         }
         const data = await response.json()
         
-        // Transform the data to match the DataTable schema
-        const formattedVisits = data?.data.map((visit) => ({
+        const formattedVisits = data?.data?.map((visit) => ({
           id: visit.id,
           property_id: visit.property_id,
           property_address: visit.property?.end_logradouro,
@@ -86,7 +98,7 @@ export default function DashboardPage() {
           client_email: visit.client_email,
           feedback: visit.feedback || '',
           created_at: visit.created_at,
-        }))
+        })) || []
         
         setVisits(formattedVisits)
       } catch (err) {
@@ -98,7 +110,7 @@ export default function DashboardPage() {
     }
 
     fetchVisits()
-  }, [])
+  }, [mounted])
 
   return (
     <main className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
