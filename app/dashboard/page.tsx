@@ -1,9 +1,9 @@
 "use client"
 
 import { ChartAreaInteractive } from "../../components/chart-area-interactive"
-import { DataTableVisits } from "../../components/data-table-visits"
+// import { DataTableVisits } from "../../components/data-table-visits"
 import { SectionCards } from "../../components/section-cards"
-import { Suspense, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // Loading skeleton for the metrics cards
@@ -63,54 +63,54 @@ export default function DashboardPage() {
   const [error, setError] = useState(null)
   const [mounted, setMounted] = useState(false)
 
-  // Primeiro useEffect apenas para marcar que o componente está montado no cliente
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  // // Primeiro useEffect apenas para marcar que o componente está montado no cliente
+  // useEffect(() => {
+  //   setMounted(true)
+  // }, [])
 
-  // Segundo useEffect que só executa quando mounted = true
-  useEffect(() => {
-    if (!mounted) return
+  // // Segundo useEffect que só executa quando mounted = true
+  // useEffect(() => {
+  //   if (!mounted) return
 
-    const fetchVisits = async () => {
-      try {
-        setIsLoading(true)
-        const response = await fetch('/api/visits', {
-          headers: {
-            'x-client-fetch': 'true'
-          }
-        })
-        if (!response.ok) {
-          throw new Error('Failed to fetch visits')
-        }
-        const data = await response.json()
+  //   const fetchVisits = async () => {
+  //     try {
+  //       setIsLoading(true)
+  //       const response = await fetch('/api/visits', {
+  //         headers: {
+  //           'x-client-fetch': 'true'
+  //         }
+  //       })
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch visits')
+  //       }
+  //       const data = await response.json()
         
-        const formattedVisits = data?.data?.map((visit) => ({
-          id: visit.id,
-          property_id: visit.property_id,
-          property_address: visit.property?.end_logradouro,
-          agent_name: visit.agent_name,
-          scheduled_date: visit.scheduled_date,
-          scheduled_time: visit.scheduled_time,
-          status: visit.status,
-          client_name: visit.client_name,
-          client_phone: visit.client_phone,
-          client_email: visit.client_email,
-          feedback: visit.feedback || '',
-          created_at: visit.created_at,
-        })) || []
+  //       const formattedVisits = data?.data?.map((visit) => ({
+  //         id: visit.id,
+  //         property_id: visit.property_id,
+  //         property_address: visit.property?.end_logradouro,
+  //         agent_name: visit.agent_name,
+  //         scheduled_date: visit.scheduled_date,
+  //         scheduled_time: visit.scheduled_time,
+  //         status: visit.status,
+  //         client_name: visit.client_name,
+  //         client_phone: visit.client_phone,
+  //         client_email: visit.client_email,
+  //         feedback: visit.feedback || '',
+  //         created_at: visit.created_at,
+  //       })) || []
         
-        setVisits(formattedVisits)
-      } catch (err) {
-        console.error('Error fetching visits:', err)
-        setError(err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
+  //       setVisits(formattedVisits)
+  //     } catch (err) {
+  //       console.error('Error fetching visits:', err)
+  //       setError(err)
+  //     } finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
 
-    fetchVisits()
-  }, [mounted])
+  //   fetchVisits()
+  // }, [mounted])
 
   return (
     <main className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
@@ -120,7 +120,7 @@ export default function DashboardPage() {
         <ChartAreaInteractive />
       </div>
 
-      <div className="px-4 lg:px-6">
+      {/* <div className="px-4 lg:px-6">
         {isLoading ? (
           <TableSkeleton />
         ) : error ? (
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         ) : (
           <DataTableVisits data={visits} />
         )}
-      </div>
+      </div> */}
     </main>
   )
 }

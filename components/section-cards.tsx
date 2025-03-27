@@ -21,6 +21,7 @@ export function SectionCards() {
 
   // Primeiro useEffect apenas para marcar que o componente está montado no cliente
   useEffect(() => {
+    console.log('SectionCards mounted')
     setMounted(true)
   }, [])
 

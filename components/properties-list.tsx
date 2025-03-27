@@ -282,7 +282,7 @@ function PropertyCard({ property }: { property: ArboImovel }) {
             ? formatCurrency(property.valor_venda)
             : formatCurrency(property.valor_aluguel)}
         </div>
-        <ScheduleVisitButton propertyId={property.codigo} />
+        {/* <ScheduleVisitButton propertyId={property.codigo} /> */}
       </CardFooter>
     </Card>
   )
@@ -342,7 +342,7 @@ function PropertyListItem({ property }: { property: ArboImovel }) {
               <span>{property.area_total || 0} m²</span>
             </div>
           </div>
-          <ScheduleVisitButton propertyId={property.codigo} />
+          {/* <ScheduleVisitButton propertyId={property.codigo} /> */}
         </div>
       </div>
     </div>

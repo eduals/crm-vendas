@@ -36,7 +36,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import { ScheduleVisitButton } from "@/components/schedule-visit-button"
+// import { ScheduleVisitButton } from "@/components/schedule-visit-button"
 import type { Visit } from "@/types/visit"
 
 interface Agent {
@@ -656,7 +656,7 @@ export default function VisitsKanban({ data }: { data: Visit[] }) {
           
           {/* Adicionar o botão de agendar visita */}
           <div className="flex items-center gap-2">
-            <ScheduleVisitButton 
+            {/* <ScheduleVisitButton 
               initialData={selectedVisit || undefined}
               onSubmitSuccess={() => {
                 setSelectedVisit(null)
@@ -667,7 +667,7 @@ export default function VisitsKanban({ data }: { data: Visit[] }) {
                   setSelectedVisit(null)
                 }
               }}
-            />
+            /> */}
           </div>
         </div>
 

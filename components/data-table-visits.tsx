@@ -58,7 +58,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ScheduleVisitButton } from "@/components/schedule-visit-button"
+// import { ScheduleVisitButton } from "@/components/schedule-visit-button"
 
 const schema = z.object({
   id: z.string(),
@@ -389,7 +389,7 @@ export function DataTableVisits({ data, onVisitUpdate }: DataTableProps) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <ScheduleVisitButton />
+          {/* <ScheduleVisitButton /> */}
         </div>
       </div>
       <div className="rounded-md border">
