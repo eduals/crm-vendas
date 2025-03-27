@@ -10,27 +10,59 @@ export async function getArboImoveis(options: {
   perPage?: number
   fields?: string[]
   search?: Record<string, string>
+  skipRefresh?: boolean
+  forceRefresh?: boolean
 }) {
   try {
-    // First refresh the database
-    const refreshResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/imoveis/refresh`, {
-      method: 'POST'
-    })
-
-    if (!refreshResponse.ok) {
-      throw new Error("Failed to refresh properties")
+    // NUNCA faça refresh durante o build ou renderização do servidor
+    // Apenas permitimos refresh explícito via botão (forceRefresh=true)
+    if (options.forceRefresh === true) {
+      try {
+        const serverUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        console.log(`Trying to refresh from: ${serverUrl}/api/imoveis/refresh`);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const refreshResponse = await fetch(`${serverUrl}/api/imoveis/refresh`, {
+          method: 'POST',
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!refreshResponse.ok) {
+          console.warn("Failed to refresh properties, continuing with existing data");
+        }
+      } catch (refreshError) {
+        // Captura qualquer erro do fetch e apenas loga
+        console.warn("Error during refresh, continuing with existing data:", refreshError);
+      }
     }
     
-    // Then get the updated data from our database
-    const response = await getLocalImoveis({
-      page: options.page,
-      perPage: options.perPage
-    })
-    
-    return { success: true, ...response }
+    // Sempre carrega do banco de dados local
+    try {
+      const response = await getLocalImoveis({
+        page: options.page,
+        perPage: options.perPage
+      });
+      
+      return { success: true, ...response };
+    } catch (dbError) {
+      console.error("Error fetching from local database:", dbError);
+      // Em caso de erro no banco, retorna array vazio
+      return { 
+        success: true, 
+        data: [], 
+        page: options.page || 1,
+        perPage: options.perPage || 50,
+        lastPage: 1,
+        total: 0
+      };
+    }
   } catch (error) {
-    console.error("Error fetching properties:", error)
-    return { success: false, error: "Failed to fetch properties" }
+    console.error("Error in getArboImoveis:", error);
+    return { success: false, error: "Failed to fetch properties" };
   }
 }
 

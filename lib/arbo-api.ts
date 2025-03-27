@@ -139,17 +139,55 @@ export async function getLocalImoveis(options: {
   const { page = 1, perPage = 50 } = options
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/imoveis/list?page=${page}&perPage=${perPage}`)
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`Erro ao buscar imóveis: ${response.status} - ${errorText}`)
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/imoveis/list?page=${page}&perPage=${perPage}`,
+        { signal: controller.signal }
+      );
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao buscar imóveis: ${response.status} - ${errorText}`);
+      }
+      
+      return await response.json();
+    } catch (fetchError: any) {
+      console.error("Erro no fetch de imóveis:", fetchError);
+      
+      // Se for ECONNREFUSED ou AbortError (timeout), retornamos dados vazios em vez de falhar
+      if (
+        fetchError.name === 'AbortError' || 
+        (fetchError.cause && fetchError.cause.code === 'ECONNREFUSED')
+      ) {
+        console.warn("Falha na conexão, retornando dados vazios");
+        return {
+          page,
+          perPage,
+          lastPage: 1,
+          total: 0,
+          data: [],
+        };
+      }
+      
+      throw fetchError;
     }
-
-    return await response.json()
   } catch (error) {
-    console.error("Erro ao buscar imóveis do banco de dados:", error)
-    throw error
+    console.error("Erro ao buscar imóveis do banco de dados:", error);
+    
+    // Em último caso, não quebre o build/render, retorne dados vazios
+    return {
+      page,
+      perPage,
+      lastPage: 1,
+      total: 0,
+      data: [],
+    };
   }
 }
 

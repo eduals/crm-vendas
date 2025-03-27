@@ -22,7 +22,7 @@ const formSchema = z.object({
 })
 
 interface ScheduleVisitFormProps {
-  propertyId: number
+  propertyId: string | number
   onSuccess?: () => void
 }
 

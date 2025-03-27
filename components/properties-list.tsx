@@ -36,6 +36,14 @@ export function PropertiesList({
   const [categoriaFilter, setCategoriaFilter] = React.useState("todas")
   const [loading, setLoading] = React.useState(false)
 
+  // Atualizar as propriedades quando initialData mudar
+  React.useEffect(() => {
+    if (initialData.length > 0 && properties.length === 0) {
+      setProperties(initialData);
+      setFilteredProperties(initialData);
+    }
+  }, [initialData, properties.length]);
+
   // Filtrar propriedades quando os filtros mudarem
   React.useEffect(() => {
     let filtered = properties
@@ -69,11 +77,13 @@ export function PropertiesList({
   const handleRefresh = async () => {
     setLoading(true)
     try {
+      // Usar forceRefresh para garantir que a atualização aconteça
       const result = await getArboImoveis({
-        perPage: 50
+        perPage: 50,
+        forceRefresh: true
       })
       
-      if (result.success) {
+      if (result.success && 'data' in result) {
         setProperties(result.data)
         toast.success("Lista de imóveis atualizada com sucesso!")
       } else {
@@ -340,7 +350,7 @@ function PropertyListItem({ property }: { property: ArboImovel }) {
 }
 
 interface ScheduleVisitButtonProps {
-  propertyId: number
+  propertyId: string | number;
 }
 
 function ScheduleVisitButton({ propertyId }: ScheduleVisitButtonProps) {

@@ -11,7 +11,7 @@ import JavaScriptObfuscator from 'webpack-obfuscator';
 const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  swcMinify: true,
+  // swcMinify: true,
   images: {
     unoptimized: true,
     remotePatterns: [

@@ -18,7 +18,7 @@ function PropertiesListSkeleton() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={`filter-${i}`} className="flex flex-col gap-2">
+            <div key={`filter-skeleton-${i}`} className="flex flex-col gap-2">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-10 w-full" />
             </div>
@@ -37,7 +37,7 @@ function PropertiesListSkeleton() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={`card-${i}`} className="rounded-lg border bg-card">
+            <div key={`card-skeleton-${i}`} className="rounded-lg border bg-card">
               <Skeleton className="aspect-video w-full" />
               <div className="p-4">
                 <div className="flex items-center justify-between">
@@ -65,8 +65,11 @@ function PropertiesListSkeleton() {
 }
 
 async function PropertiesContent() {
+  // Nunca fazer refresh automático durante o build ou SSR
   const result = await getArboImoveis({
     perPage: 50,
+    skipRefresh: true, // Mantido por compatibilidade
+    forceRefresh: false, // Garantimos que nunca fará refresh automático
     fields: [
       "codigo",
       "descricao",
@@ -86,7 +89,10 @@ async function PropertiesContent() {
     ],
   })
 
-  return <PropertiesList initialData={result.success ? result.data : []} />
+  // Tratamento seguro para evitar erro de tipagem
+  const properties = result.success && 'data' in result ? result.data : [];
+  
+  return <PropertiesList initialData={properties} />
 }
 
 export default function PropertiesPage() {
