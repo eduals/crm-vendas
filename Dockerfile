@@ -26,7 +26,7 @@ COPY hooks ./hooks
 COPY types ./types
 COPY public ./public
 COPY styles ./styles
-COPY middleware.js ./
+COPY middleware.ts ./
 COPY scripts ./scripts
 
 # Check if we have an .env file and copy it
@@ -96,7 +96,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/.env* ./
+# COPY --from=builder --chown=nextjs:nodejs /app/.env* ./
 
 # Switch to non-root user
 USER nextjs
