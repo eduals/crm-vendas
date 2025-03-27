@@ -68,16 +68,44 @@ function transformArboImovel(imovel: ArboImovel): Property {
 }
 
 async function getImoveis(): Promise<ArboImovel[]> {
-  const response = await fetch("/api/imoveis/list")
-  if (!response.ok) throw new Error("Falha ao carregar imóveis")
-  const data: ArboResponse = await response.json()
-  return data.data
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos
+  
+  try {
+    const response = await fetch("/api/imoveis/list", {
+      headers: { 'x-client-fetch': 'true' },
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) throw new Error("Falha ao carregar imóveis");
+    const data: ArboResponse = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("Erro ao buscar imóveis:", error);
+    return []; // Retorna array vazio em caso de erro
+  }
 }
 
 async function getAgents(): Promise<Agent[]> {
-  const response = await fetch("/api/agents")
-  if (!response.ok) throw new Error("Failed to fetch agents")
-  return response.json()
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos
+  
+  try {
+    const response = await fetch("/api/agents", {
+      headers: { 'x-client-fetch': 'true' },
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) throw new Error("Failed to fetch agents");
+    return response.json();
+  } catch (error) {
+    console.error("Erro ao buscar agentes:", error);
+    return []; // Retorna array vazio em caso de erro
+  }
 }
 
 async function createVisit(data: ScheduleVisitForm) {
@@ -143,6 +171,7 @@ export function ScheduleVisitButton({ initialData, onSubmitSuccess, onOpenChange
   const [agents, setAgents] = React.useState<Agent[]>([])
   const [isLoadingProperties, setIsLoadingProperties] = React.useState(true)
   const [isLoadingAgents, setIsLoadingAgents] = React.useState(true)
+  const [mounted, setMounted] = React.useState(false)
 
   const form = useForm<ScheduleVisitForm>({
     resolver: zodResolver(scheduleVisitSchema),
@@ -151,8 +180,18 @@ export function ScheduleVisitButton({ initialData, onSubmitSuccess, onOpenChange
     }
   })
 
+  // Adicionar este useEffect para controlar o mounted
+  React.useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  // Modificar os useEffects para respeitar o estado mounted
   // Fetch properties
   React.useEffect(() => {
+    // Não executa o fetch se não estiver montado no cliente
+    if (!mounted) return
+
     async function fetchProperties() {
       try {
         const imoveis = await getImoveis()
@@ -160,13 +199,12 @@ export function ScheduleVisitButton({ initialData, onSubmitSuccess, onOpenChange
         // Filtragem mais robusta de propriedades válidas
         const validProperties = imoveis
           .map(transformArboImovel)
-          // Sem filtro, para garantir que vamos ver todos os imóveis e depurar
         
         console.log('Debug - Imóveis:', {
           total: imoveis.length,
           validos: validProperties.length,
           primeiro: validProperties[0],
-          ids: validProperties.map(p => p.property_id).slice(0, 5) // primeiros 5 IDs para verificar
+          ids: validProperties.map(p => p.property_id).slice(0, 5)
         });
         
         setProperties(validProperties);
@@ -178,10 +216,13 @@ export function ScheduleVisitButton({ initialData, onSubmitSuccess, onOpenChange
       }
     }
     fetchProperties()
-  }, [])
+  }, [mounted]) // Adicionar mounted como dependência
 
   // Fetch agents
   React.useEffect(() => {
+    // Não executa o fetch se não estiver montado no cliente
+    if (!mounted) return
+
     async function fetchAgents() {
       try {
         const data = await getAgents()
@@ -193,7 +234,7 @@ export function ScheduleVisitButton({ initialData, onSubmitSuccess, onOpenChange
       }
     }
     fetchAgents()
-  }, [])
+  }, [mounted]) // Adicionar mounted como dependência
 
   // Adicionar este useEffect para abrir o Sheet quando initialData mudar
   React.useEffect(() => {
