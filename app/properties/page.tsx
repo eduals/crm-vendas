@@ -1,9 +1,7 @@
-import { SiteHeader } from "../../components/site-header"
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { getArboImoveis } from "@/lib/actions"
+"use client"
+
+import { useState, useEffect } from "react"
 import { PropertiesList } from "@/components/properties-list"
-import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // Loading skeleton for the properties list
@@ -64,45 +62,43 @@ function PropertiesListSkeleton() {
   )
 }
 
-async function PropertiesContent() {
-  // Nunca fazer refresh automático durante o build ou SSR
-  const result = await getArboImoveis({
-    perPage: 50,
-    skipRefresh: true, // Mantido por compatibilidade
-    forceRefresh: false, // Garantimos que nunca fará refresh automático
-    fields: [
-      "codigo",
-      "descricao",
-      "categoria",
-      "finalidade",
-      "end_logradouro",
-      "end_bairro",
-      "end_cidade",
-      "end_estado",
-      "area_total",
-      "valor_venda",
-      "valor_aluguel",
-      "qtd_quartos",
-      "qtd_suites",
-      "qtd_vagas",
-      "fotos",
-    ],
-  })
-
-  // Tratamento seguro para evitar erro de tipagem
-  const properties = result.success && 'data' in result ? result.data : [];
-  
-  return <PropertiesList initialData={properties} />
-}
-
 export default function PropertiesPage() {
+  const [properties, setProperties] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch('/api/imoveis/list')
+        if (!response.ok) {
+          throw new Error('Failed to fetch properties')
+        }
+        const result = await response.json()
+        setProperties(result.data || [])
+      } catch (err) {
+        console.error('Error fetching properties:', err)
+        setError(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProperties()
+  }, [])
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-          <Suspense fallback={<PropertiesListSkeleton />}>
-            <PropertiesContent />
-          </Suspense>
+          {isLoading ? (
+            <PropertiesListSkeleton />
+          ) : error ? (
+            <div className="p-4 text-red-500">Error: {error.message}</div>
+          ) : (
+            <PropertiesList initialData={properties} />
+          )}
         </div>
       </div>
     </div>

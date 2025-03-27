@@ -1,92 +1,49 @@
+"use client"
+
+import React, { useState, useEffect } from 'react'
 import { TrendingDownIcon, TrendingUpIcon, EyeIcon, AlertOctagonIcon } from "lucide-react"
-import { Suspense } from "react"
 import Link from "next/link"
-import { fetchMetrics } from "@/lib/services/metrics"
 import { Button } from "@/components/ui/button"
 import { EmptyState } from "@/components/empty-state"
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
-export async function SectionCards() {
-  try {
-    // console.log('SectionCards: Fetching metrics...')
-    const metrics = await fetchMetrics()
-    // console.log('SectionCards: Metrics received:', metrics)
+export function SectionCards() {
+  const [metrics, setMetrics] = useState({
+    visits: { total: 0, withProposals: 0, monthlyChange: 0 },
+    brokers: { total: 0, monthlyChange: 0 },
+    properties: { total: 0, published: 0, publicationRate: 0 }
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-    const conversionRate = metrics.visits.total 
-      ? ((metrics.visits.withProposals / metrics.visits.total) * 100).toFixed(1)
-      : 0
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch('/api/metrics')
+        if (!response.ok) {
+          throw new Error('Failed to fetch metrics')
+        }
+        const data = await response.json()
+        setMetrics(data)
+      } catch (err) {
+        console.error('Error fetching metrics:', err)
+        setError(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 *:data-[slot=card]:shadow-xs *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-        <Suspense fallback={<CardSkeleton />}>
-          {!metrics.visits.total ? (
-            <EmptyState
-              title="Nenhuma visita registrada"
-              description="Comece agendando sua primeira visita"
-              action={
-                <Button asChild size="sm">
-                  <Link href="/visits">Agendar Visita</Link>
-                </Button>
-              }
-            />
-          ) : (
-            <MetricCard
-              title="Total de Visitas"
-              value={metrics.visits.total}
-              change={metrics.visits.monthlyChange}
-            />
-          )}
-        </Suspense>
-        <Suspense fallback={<CardSkeleton />}>
-          {!metrics.brokers.total ? (
-            <EmptyState
-              title="Nenhum corretor ativo"
-              description="Adicione seu primeiro corretor"
-              action={
-                <Button asChild size="sm">
-                  <Link href="/brokers">Adicionar Corretor</Link>
-                </Button>
-              }
-            />
-          ) : (
-            <MetricCard
-              title="Corretores Ativos"
-              value={metrics.brokers.total}
-              change={metrics.brokers.monthlyChange}
-            />
-          )}
-        </Suspense>
-        <Suspense fallback={<CardSkeleton />}>
-          {!metrics.properties.total ? (
-            <EmptyState
-              title="Nenhum imóvel cadastrado"
-              description="Adicione seu primeiro imóvel"
-              action={
-                <Button asChild size="sm">
-                  <Link href="/properties">Cadastrar Imóvel</Link>
-                </Button>
-              }
-            />
-          ) : (
-            <PropertyMetricCard
-              title="Imóveis no Portfólio"
-              total={metrics.properties.total}
-              published={metrics.properties.published}
-              publicationRate={metrics.properties.publicationRate}
-            />
-          )}
-        </Suspense>
-        <MetricCard
-          title="Taxa de Conversão"
-          value={`${conversionRate}%`}
-          change={0} // Calculate if needed
-        />
-      </div>
-    )
-  } catch (error) {
-    console.error('Error in SectionCards:', error)
+    fetchMetrics()
+  }, [])
+
+  if (isLoading) {
+    return <CardSkeletonGroup />
+  }
+
+  if (error) {
     return (
       <div className="p-4">
         <EmptyState
@@ -101,6 +58,85 @@ export async function SectionCards() {
       </div>
     )
   }
+
+  const conversionRate = metrics.visits.total 
+    ? ((metrics.visits.withProposals / metrics.visits.total) * 100).toFixed(1)
+    : 0
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 *:data-[slot=card]:shadow-xs *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+      {!metrics.visits.total ? (
+        <EmptyState
+          title="Nenhuma visita registrada"
+          description="Comece agendando sua primeira visita"
+          action={
+            <Button asChild size="sm">
+              <Link href="/visits">Agendar Visita</Link>
+            </Button>
+          }
+        />
+      ) : (
+        <MetricCard
+          title="Total de Visitas"
+          value={metrics.visits.total}
+          change={metrics.visits.monthlyChange}
+        />
+      )}
+      
+      {!metrics.brokers.total ? (
+        <EmptyState
+          title="Nenhum corretor ativo"
+          description="Adicione seu primeiro corretor"
+          action={
+            <Button asChild size="sm">
+              <Link href="/brokers">Adicionar Corretor</Link>
+            </Button>
+          }
+        />
+      ) : (
+        <MetricCard
+          title="Corretores Ativos"
+          value={metrics.brokers.total}
+          change={metrics.brokers.monthlyChange}
+        />
+      )}
+      
+      {!metrics.properties.total ? (
+        <EmptyState
+          title="Nenhum imóvel cadastrado"
+          description="Adicione seu primeiro imóvel"
+          action={
+            <Button asChild size="sm">
+              <Link href="/properties">Cadastrar Imóvel</Link>
+            </Button>
+          }
+        />
+      ) : (
+        <PropertyMetricCard
+          title="Imóveis no Portfólio"
+          total={metrics.properties.total}
+          published={metrics.properties.published}
+          publicationRate={metrics.properties.publicationRate}
+        />
+      )}
+      
+      <MetricCard
+        title="Taxa de Conversão"
+        value={`${conversionRate}%`}
+        change={0} // Calculate if needed
+      />
+    </div>
+  )
+}
+
+function CardSkeletonGroup() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 px-4 lg:px-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  )
 }
 
 function CardSkeleton() {

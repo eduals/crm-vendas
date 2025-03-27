@@ -1,8 +1,9 @@
+"use client"
+
 import { ChartAreaInteractive } from "../../components/chart-area-interactive"
 import { DataTableVisits } from "../../components/data-table-visits"
 import { SectionCards } from "../../components/section-cards"
-import { Suspense } from "react"
-import { getVisits } from "@/lib/utils"
+import { Suspense, useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 // Loading skeleton for the metrics cards
@@ -56,23 +57,65 @@ function TableSkeleton() {
   )
 }
 
-export default async function DashboardPage() {
+export default function DashboardPage() {
+  const [visits, setVisits] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchVisits = async () => {
+      try {
+        setIsLoading(true)
+        const response = await fetch('/api/visits')
+        if (!response.ok) {
+          throw new Error('Failed to fetch visits')
+        }
+        const data = await response.json()
+        
+        // Transform the data to match the DataTable schema
+        const formattedVisits = data?.data.map((visit) => ({
+          id: visit.id,
+          property_id: visit.property_id,
+          property_address: visit.property?.end_logradouro,
+          agent_name: visit.agent_name,
+          scheduled_date: visit.scheduled_date,
+          scheduled_time: visit.scheduled_time,
+          status: visit.status,
+          client_name: visit.client_name,
+          client_phone: visit.client_phone,
+          client_email: visit.client_email,
+          feedback: visit.feedback || '',
+          created_at: visit.created_at,
+        }))
+        
+        setVisits(formattedVisits)
+      } catch (err) {
+        console.error('Error fetching visits:', err)
+        setError(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchVisits()
+  }, [])
+
   return (
     <main className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-      <Suspense fallback={<MetricsSkeleton />}>
-        <SectionCards />
-      </Suspense>
+      <SectionCards />
       
       <div className="px-4 lg:px-6">
-        <Suspense fallback={<ChartSkeleton />}>
-          <ChartAreaInteractive />
-        </Suspense>
+        <ChartAreaInteractive />
       </div>
 
       <div className="px-4 lg:px-6">
-        <Suspense fallback={<TableSkeleton />}>
-          <DataTableVisits data={await getVisits()} />
-        </Suspense>
+        {isLoading ? (
+          <TableSkeleton />
+        ) : error ? (
+          <div className="p-4 text-red-500">Error: {error.message}</div>
+        ) : (
+          <DataTableVisits data={visits} />
+        )}
       </div>
     </main>
   )
